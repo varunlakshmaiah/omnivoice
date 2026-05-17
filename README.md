@@ -65,9 +65,9 @@ You can run OmniVoice completely for free using **Alexa-Hosted Skills** (Amazon 
 1. Log in to the [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask).
 2. Click **Create Skill**, name it **OmniVoice**, and select your default language.
 3. Select **Custom** for the model, and choose **Alexa-Hosted (Python)** for the hosting method.
-4. Scroll down to **Choose a method to import code**, select **Import from Git**, and paste your GitHub clone URL:
-   `https://github.com/your-username/omnivoice.git`
-5. Click **Create Skill** and wait for the setup to complete.
+4. Scroll down to **Choose a method to import code**, select **Import from Git**, and paste your public repository URL:
+   `https://github.com/varunlakshmaiah/omnivoice.git`
+5. Click **Create Skill** and wait for the workspace setup to complete (approx. 1-2 minutes).
 
 ### Step 2: Configure Environment Variables
 1. Once inside your skill dashboard, go to the **Code** tab in the top navigation.
@@ -99,6 +99,37 @@ Configure your assistant behavior by updating the environment variables inside y
 | `LLM_MAX_TOKENS` | `200` | Limits vocal response length (voice responses should be concise). |
 | `LLM_MAX_HISTORY_TURNS` | `10` | Conversation memory depth (number of turns to retain). |
 | `LLM_UTC_OFFSET` | `5.5` | System clock timezone offset (e.g. `5.5` for IST, `-5` for EST). |
+
+---
+
+## 🎨 Personalization & Customization Guide
+
+One of the best features of OmniVoice is how simple it is to tailor to your exact preferences. Here is your checklist of files to modify to make OmniVoice uniquely yours:
+
+### 1. Change the Assistant Persona & Instructions
+To change how your assistant behaves, speaks, or responds, modify the system prompt builder function in your python backend:
+*   **File to Modify:** [lambda/lambda_function.py](file:///Users/var/Documents/Projects/alexa/lambda/lambda_function.py#L64-L86) (specifically the `build_system_prompt()` function).
+*   **Instructions:** Change the system prompt instructions inside the multiline string. For example, you can instruct it to be highly professional, a creative sci-fi robot, a dynamic language tutor, or a sarcastic companion.
+
+### 2. Rename the Vocal Starter (Invocation Name)
+To change the phrase you speak to start the skill (e.g. changing *"Alexa, open Omni Voice"* to *"Alexa, open Jarvis"* or *"Alexa, open my computer"*):
+*   **Files to Modify:** Localized interaction models under [skill-package/interactionModels/custom/](file:///Users/var/Documents/Projects/alexa/skill-package/interactionModels/custom/)
+    - [en-US.json](file:///Users/var/Documents/Projects/alexa/skill-package/interactionModels/custom/en-US.json)
+    - [en-GB.json](file:///Users/var/Documents/Projects/alexa/skill-package/interactionModels/custom/en-GB.json)
+    - [en-CA.json](file:///Users/var/Documents/Projects/alexa/skill-package/interactionModels/custom/en-CA.json)
+    - [en-AU.json](file:///Users/var/Documents/Projects/alexa/skill-package/interactionModels/custom/en-AU.json)
+    - [en-IN.json](file:///Users/var/Documents/Projects/alexa/skill-package/interactionModels/custom/en-IN.json)
+*   **Instructions:** Open the JSON model matching your language, locate `"invocationName"`, and change its value to your preferred invocation phrase. 
+    > [!IMPORTANT]
+    > Amazon requires the invocation name to contain 2 or more words, be in lowercase, and not contain acronyms or trademarked words that Alexa cannot easily phonetically parse.
+
+### 3. Customize Launch Greetings & Farewell Messages
+If you want to customize the initial greeting when you open the skill, or the message spoken when you exit:
+*   **File to Modify:** [lambda/lambda_function.py](file:///Users/var/Documents/Projects/alexa/lambda/lambda_function.py#L90-L105)
+*   **Instructions:** Locate the globally defined string constants:
+    *   `WELCOME_MSG`: The initial greeting spoken when the skill launches.
+    *   `HELP_MSG`: The default spoken help text.
+    *   `GOODBYE_MSG`: The spoken text when the user closes the skill or says "stop/exit".
 
 ---
 
