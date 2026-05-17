@@ -2,6 +2,11 @@
   "interactionModel": {
     "languageModel": {
       "invocationName": "omni voice",
+      "modelConfiguration": {
+        "fallbackIntentSensitivity": {
+          "level": "HIGH"
+        }
+      },
       "intents": [
         {
           "name": "LLMQueryIntent",
@@ -161,11 +166,7 @@
           "samples": []
         }
       ],
-      "modelConfiguration": {
-        "fallbackIntentSensitivity": {
-          "level": "HIGH"
-        }
-      }
+      "types": []
     }
   }
 }
