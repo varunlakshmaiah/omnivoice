@@ -8,7 +8,7 @@
 OmniVoice is a zero-friction, fully generic, and highly optimized open-source Alexa skill that connects your Amazon smart speaker to **any OpenAI-compatible Large Language Model (LLM)**. Ditch the rigid, pre-programmed voice commands and turn your Alexa into a fluid, highly intelligent, and sardonically witty personal AI assistant.
 
 <p align="center">
-  <img src="images/hero.png" alt="OmniVoice Hero Image" width="550" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <img src="images/hero.png" alt="OmniVoice Header Banner" width="100%" />
 </p>
 
 ---
