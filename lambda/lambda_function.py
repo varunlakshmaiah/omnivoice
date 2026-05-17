@@ -69,17 +69,37 @@ logger.setLevel(logging.INFO)
 # ─── System Prompt ───────────────────────────────────────────────────────────
 
 
-def build_system_prompt():
+def get_user_name(handler_input):
+    """Retrieve the user's first name from the Alexa Customer Profile Service."""
+    try:
+        service_client_factory = handler_input.service_client_factory
+        if service_client_factory is None:
+            logger.info("Service client factory not available (e.g., local test/mock)")
+            return None
+        ups_service_client = service_client_factory.get_ups_service_client()
+        name = ups_service_client.get_profile_given_name()
+        if name:
+            logger.info(f"Successfully retrieved user name: {name}")
+            return name
+    except Exception as e:
+        # Expected behavior if the user hasn't granted permissions in the Alexa app yet
+        logger.debug(f"Could not retrieve user name from Customer Profile API: {e}")
+    return None
+
+
+def build_system_prompt(user_name=None):
     """Build the OmniVoice system prompt with current date/time."""
     utc_offset = timedelta(hours=LLM_UTC_OFFSET)
     now = datetime.now(timezone(utc_offset))
     current_datetime = now.strftime("%A, %B %d %Y, %I:%M %p")
 
+    address_name = user_name if user_name else "Sir"
+
     return (
         f"You are OmniVoice, an AI assistant with a dry wit and subtle sarcasm — "
         f"think Alfred meets Tony Stark. "
         f"You are highly intelligent, slightly sardonic, but always ultimately helpful. "
-        f"Always address the user as Sir. "
+        f"Always address the user as {address_name}. "
         f"Never use filler phrases like Certainly, Of course, or Great question. "
         f"Get straight to the point. "
         f"If you do not know something, say so in one short sentence and stop. "
@@ -124,15 +144,17 @@ def detect_temperature(question):
         return 0.5
 
 
-def generate_response(chat_history, question):
+def generate_response(chat_history, question, user_name=None):
     """Send the conversation to the LLM and return the response."""
     headers = {
         "Authorization": f"Bearer {LLM_API_KEY}",
         "Content-Type": "application/json",
     }
 
+    address_name = user_name if user_name else "Sir"
+
     # Build messages array
-    messages = [{"role": "system", "content": build_system_prompt()}]
+    messages = [{"role": "system", "content": build_system_prompt(user_name)}]
 
     # Append conversation history (sliding window — last N turns)
     for user_msg, assistant_msg in chat_history[-LLM_MAX_HISTORY_TURNS:]:
@@ -165,15 +187,15 @@ def generate_response(chat_history, question):
         else:
             error_msg = response_data.get("error", {}).get("message", "Unknown error")
             logger.error(f"API error: {error_msg}")
-            return "Apologies Sir, my neural networks are experiencing interference. Please try again."
+            return f"Apologies {address_name}, my neural networks are experiencing interference. Please try again."
 
     except requests.exceptions.Timeout:
         logger.error("LLM API timeout")
-        return "I'm afraid that query took longer than expected, Sir. Could you try a simpler question?"
+        return f"I'm afraid that query took longer than expected, {address_name}. Could you try a simpler question?"
 
     except Exception as e:
         logger.error(f"Error generating response: {str(e)}", exc_info=True)
-        return "Something went wrong on my end, Sir. Please try again."
+        return f"Something went wrong on my end, {address_name}. Please try again."
 
 
 # ─── Progressive Response ────────────────────────────────────────────────────
@@ -184,12 +206,15 @@ def send_progressive_response(handler_input, speech=None):
     Send a progressive response to keep the user engaged while the LLM processes.
     Requires CustomSkillBuilder with DefaultApiClient.
     """
+    user_name = get_user_name(handler_input)
+    address_name = user_name if user_name else "Sir"
+
     thinking_phrases = [
-        "Working on it, Sir.",
-        "One moment, Sir.",
-        "Let me think about that, Sir.",
-        "Processing, Sir.",
-        "Analyzing your query, Sir.",
+        f"Working on it, {address_name}.",
+        f"One moment, {address_name}.",
+        f"Let me think about that, {address_name}.",
+        f"Processing, {address_name}.",
+        f"Analyzing your query, {address_name}.",
     ]
 
     if speech is None:
@@ -228,16 +253,19 @@ class LaunchRequestHandler(AbstractRequestHandler):
         session_attr = handler_input.attributes_manager.session_attributes
         session_attr["chat_history"] = []
 
+        user_name = get_user_name(handler_input)
+        address_name = user_name if user_name else "Sir"
+
         speech = (
             '<audio src="soundbank://soundlibrary/computers/beeps_tones/'
             'beeps_tones_13"/>'
-            "OmniVoice activated. How may I assist you, Sir?"
+            f"OmniVoice activated. How may I assist you, {address_name}?"
         )
 
         return (
             handler_input.response_builder
             .speak(speech)
-            .ask("Go ahead, Sir.")
+            .ask(f"Go ahead, {address_name}.")
             .response
         )
 
@@ -251,11 +279,14 @@ class LlmQueryIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         query = get_slot_value(handler_input=handler_input, slot_name="query")
 
+        user_name = get_user_name(handler_input)
+        address_name = user_name if user_name else "Sir"
+
         if not query or not query.strip():
             return (
                 handler_input.response_builder
-                .speak("I didn't catch that, Sir. Could you repeat your question?")
-                .ask("Go ahead, Sir.")
+                .speak(f"I didn't catch that, {address_name}. Could you repeat your question?")
+                .ask(f"Go ahead, {address_name}.")
                 .response
             )
 
@@ -269,8 +300,8 @@ class LlmQueryIntentHandler(AbstractRequestHandler):
         if "chat_history" not in session_attr:
             session_attr["chat_history"] = []
 
-        # Call the LLM
-        response = generate_response(session_attr["chat_history"], query)
+        # Call the LLM with user_name
+        response = generate_response(session_attr["chat_history"], query, user_name=user_name)
 
         # Save to conversation history
         session_attr["chat_history"].append([query, response])
@@ -286,7 +317,7 @@ class LlmQueryIntentHandler(AbstractRequestHandler):
         return (
             handler_input.response_builder
             .speak(response)
-            .ask("Anything else, Sir?")
+            .ask(f"Anything else, {address_name}?")
             .response
         )
 
@@ -314,6 +345,9 @@ class FallbackIntentHandler(AbstractRequestHandler):
                     user_input = slot.value
                     break
 
+        user_name = get_user_name(handler_input)
+        address_name = user_name if user_name else "Sir"
+
         if user_input and user_input.strip():
             logger.info(f"[FallbackIntent] Captured utterance: {user_input}")
 
@@ -323,7 +357,7 @@ class FallbackIntentHandler(AbstractRequestHandler):
             if "chat_history" not in session_attr:
                 session_attr["chat_history"] = []
 
-            response = generate_response(session_attr["chat_history"], user_input)
+            response = generate_response(session_attr["chat_history"], user_input, user_name=user_name)
             session_attr["chat_history"].append([user_input, response])
             
             # Trim history
@@ -335,20 +369,20 @@ class FallbackIntentHandler(AbstractRequestHandler):
             return (
                 handler_input.response_builder
                 .speak(response)
-                .ask("Anything else, Sir?")
+                .ask(f"Anything else, {address_name}?")
                 .response
             )
 
         # If we couldn't extract input, provide guidance
         speech = (
-            "I'm sorry Sir, I didn't catch that. "
+            f"I'm sorry {address_name}, I didn't catch that. "
             "Try starting your question with words like 'What is', 'How does', or simply 'And...' "
             "to help me process it."
         )
         return (
             handler_input.response_builder
             .speak(speech)
-            .ask("How can I help, Sir?")
+            .ask(f"How can I help, {address_name}?")
             .response
         )
 

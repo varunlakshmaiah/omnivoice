@@ -9,7 +9,11 @@
       }
     },
     "manifestVersion": "1.0",
-    "permissions": [],
+    "permissions": [
+      {
+        "name": "alexa::profile:given_name:read"
+      }
+    ],
     "privacyAndCompliance": {
       "allowsPurchases": false,
       "isChildDirected": false,

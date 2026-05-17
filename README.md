@@ -129,13 +129,17 @@ To change the phrase you speak to start the skill (e.g. changing *"Alexa, open O
     > [!IMPORTANT]
     > Amazon requires the invocation name to contain 2 or more words, be in lowercase, and not contain acronyms or trademarked words that Alexa cannot easily phonetically parse.
 
-### 3. Customize Launch Greetings & Farewell Messages
-If you want to customize the initial greeting when you open the skill, or the message spoken when you exit:
-*   **File to Modify:** [lambda/lambda_function.py](file:///Users/var/Documents/Projects/alexa/lambda/lambda_function.py#L90-L105)
-*   **Instructions:** Locate the globally defined string constants:
-    *   `WELCOME_MSG`: The initial greeting spoken when the skill launches.
-    *   `HELP_MSG`: The default spoken help text.
-    *   `GOODBYE_MSG`: The spoken text when the user closes the skill or says "stop/exit".
+### 3. Customize Launch Greetings & Farewell Messages & Personalized Address
+OmniVoice supports **dynamic first-name personalization**! Instead of calling you *"Sir"*, it can dynamically retrieve your first name registered in your Amazon Alexa account and address you personally throughout the conversation (greetings, progressive responses, LLM personality, and error fallbacks).
+
+*   **How it Works:** The Python backend queries the **Alexa Customer Profile API** to retrieve your first name. If the API is blocked or permission has not been granted, it seamlessly and gracefully falls back to the respectful, sardonic *"Sir"*.
+*   **How to Enable Name Personalization:**
+    1.  Open the **Alexa App** on your smartphone.
+    2.  Tap **More** (bottom right) ➔ **Skills & Games** ➔ Tap **Your Skills** ➔ Select **OmniVoice**.
+    3.  Tap **Settings** ➔ Tap **Manage Permissions**.
+    4.  Toggle **Customer Name (First Name)** to **On**!
+*   **Files to Modify for Custom Greetings:**
+    - [lambda/lambda_function.py](file:///Users/var/Documents/Projects/alexa/lambda/lambda_function.py#L252-L267) (inside the `LaunchRequestHandler` to change the voice welcome, sound effects, or default address templates).
 
 ---
 
