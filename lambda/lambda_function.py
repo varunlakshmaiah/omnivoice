@@ -55,7 +55,7 @@ LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
 LLM_BASE_URL = os.environ.get(
     "LLM_BASE_URL", "https://openrouter.ai/api/v1/chat/completions"
 )
-LLM_MODEL = os.environ.get("LLM_MODEL", "deepseek/deepseek-v4-flash")
+LLM_MODEL = os.environ.get("LLM_MODEL", "google/gemini-2.5-flash:free")
 LLM_MAX_HISTORY_TURNS = int(os.environ.get("LLM_MAX_HISTORY_TURNS", "10"))
 LLM_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", "200"))
 LLM_UTC_OFFSET = float(os.environ.get("LLM_UTC_OFFSET", "5.5"))

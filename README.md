@@ -110,11 +110,11 @@ Voice-based AI systems have strict timeouts and execution rules. Review these gu
 > [!IMPORTANT]
 > **Alexa has a hard platform timeout limit of 8 seconds.** If your backend code does not return a fully formed response to Alexa's servers within 8 seconds, the Echo device will crash, shut down, or say: *"There was a problem with the requested skill's response."*
 
-*   **The Cause:** Choosing slow models (like large reasoning models like DeepSeek-R1 or highly congested free endpoints) can easily take 10 to 15 seconds to reply.
-*   **The Symptom:** You see `"LLM API timeout"` errors in your logs, and OmniVoice says: *"I'm afraid that query took longer than expected, Sir."*
+*   **The Cause:** Choosing massive reasoning models (like DeepSeek-R1) or using highly congested endpoints can take 10 to 15 seconds to generate a response, immediately causing Alexa to sever the connection.
+*   **The Symptom:** The Alexa speaker says: *"There was a problem with the requested skill's response"* and you see API timeout exceptions in your CloudWatch logs.
 *   **The Fix:** Always use high-speed, low-latency models. We highly recommend:
-    - **Google Gemini 2.5 Flash** (`google/gemini-2.5-flash:free`) on OpenRouter (1–2s response time).
-    - **Groq API** (`llama-3.3-70b-specdec` or `llama3-8b-8192` via `https://api.groq.com/openai/v1/chat/completions`) which yields incredibly fast sub-second voice responses.
+    - **Google Gemini 2.5 Flash** (`google/gemini-2.5-flash:free` or `google/gemini-2.5-flash`): The absolute best balance of speed (1.0 - 1.5 seconds) and cost-efficiency. Perfect for rich, conversational responses.
+    - **Groq API** (`llama-3.3-70b-specdec` or `llama3-8b-8192` via `https://api.groq.com/openai/v1/chat/completions`): The **absolute speed champion**. Leverages Groq LPU technology to return full responses in **0.2 - 0.4 seconds**, making your voice interaction feel completely instantaneous and conversational.
 
 ### 2. Preventing Abrupt Skill Exits
 > [!WARNING]
