@@ -64,7 +64,13 @@ You can run OmniVoice completely for free using **Alexa-Hosted Skills** (Amazon 
 ### Step 1: Create the Skill
 1. Log in to the [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask).
 2. Click **Create Skill**, name it **OmniVoice**, and select your default language.
-3. Select **Custom** for the model, and choose **Alexa-Hosted (Python)** for the hosting method.
+3. Select **Custom** for the model, and choose **Alexa-Hosted (Python)** for the hosting method:
+   
+   <p align="center">
+     <img src="images/console_custom_model.png" alt="Select Custom Model" width="49%" />
+     <img src="images/console_python_hosting.png" alt="Select Alexa-Hosted Python" width="49%" />
+   </p>
+
 4. Scroll down to **Choose a method to import code**, select **Import from Git**, and paste your public repository URL:
    `https://github.com/varunlakshmaiah/omnivoice.git`
 5. Click **Create Skill** and wait for the workspace setup to complete (approx. 1-2 minutes).
