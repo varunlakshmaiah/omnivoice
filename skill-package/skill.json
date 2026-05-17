@@ -1,0 +1,59 @@
+{
+  "manifest": {
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "ask-custom-service-default"
+        },
+        "interfaces": []
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "",
+          "termsOfUseUrl": ""
+        }
+      }
+    },
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "OmniVoice",
+          "summary": "An intelligent AI voice assistant connected to advanced LLMs (OpenAI, DeepSeek, Llama, Gemini).",
+          "description": "OmniVoice is your personal AI voice assistant on Alexa. Connect Alexa to any OpenAI-compatible LLM provider (including OpenRouter, Groq, Together AI, or OpenAI) to ask complex questions, get advanced explanations, brainstorm ideas, or have fluid, multi-turn conversations. Powered by state-of-the-art models like Gemini, DeepSeek, and Llama.",
+          "examplePhrases": [
+            "Alexa, open Omni Voice",
+            "Alexa, ask Omni Voice what is quantum computing",
+            "Alexa, ask Omni Voice to write a poem"
+          ],
+          "keywords": [
+            "AI",
+            "assistant",
+            "omnivoice",
+            "chatbot",
+            "LLM",
+            "smart",
+            "knowledge",
+            "conversation",
+            "gemini",
+            "deepseek",
+            "llama"
+          ],
+          "smallIconUri": "",
+          "largeIconUri": ""
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Say 'Alexa, open Omni Voice' to start a conversation. Ask any question. The skill connects Alexa directly to your preferred LLM provider.",
+      "category": "EDUCATION_AND_REFERENCE",
+      "distributionCountries": []
+    }
+  }
+}
