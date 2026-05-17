@@ -132,7 +132,9 @@ To change the phrase you speak to start the skill (e.g. changing *"Alexa, open O
 ### 3. Customize Launch Greetings & Farewell Messages & Personalized Address
 OmniVoice supports **dynamic first-name personalization**! Instead of calling you *"Sir"*, it can dynamically retrieve your first name registered in your Amazon Alexa account and address you personally throughout the conversation (greetings, progressive responses, LLM personality, and error fallbacks).
 
-*   **How it Works:** The Python backend queries the **Alexa Customer Profile API** to retrieve your first name. If the API is blocked or permission has not been granted, it seamlessly and gracefully falls back to the respectful, sardonic *"Sir"*.
+*   **How it Works:** The Python backend queries the **Alexa Customer Profile API** to retrieve your first name.
+    > [!TIP]
+    > **This is 100% optional and fail-safe!** If the API call fails or permission is blocked/withheld, the backend code **will never crash or break**. It gracefully catches the platform block and seamlessly falls back to using the default respectful, sardonic *"Sir"*.
 *   **How to Enable Name Personalization:**
     1.  Open the **Alexa App** on your smartphone.
     2.  Tap **More** (bottom right) ➔ **Skills & Games** ➔ Tap **Your Skills** ➔ Select **OmniVoice**.
