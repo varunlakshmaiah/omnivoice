@@ -167,6 +167,13 @@ Voice-based AI systems have strict timeouts and execution rules. Review these gu
     - Check your API key. If your LLM provider's balance is `$0`, the API will return a `401 Unauthorized` or `402 Payment Required` code, leading to a crash.
     - Check your AWS CloudWatch / Alexa Developer Code console logs. Make sure that your `.env` variables are correctly written with **no spaces** around the `=` signs.
 
+### 4. Alexa Says: "I am not quite sure how to help you with that"
+*   **The Cause:** Alexa fails to recognize the invocation phrase `"omni voice"` because the custom interaction model has not been built/compiled, the testing status is stale, or the physical Echo Dot's language setting is mismatched.
+*   **The Fixes:**
+    1.  **Rebuild the NLU Model:** Go to the **Build** tab in your Alexa Developer Console and click the green **Build Model** button in the right-hand panel. Alexa cannot phonetically map your voice to `"omni voice"` until the NLU model compiles successfully!
+    2.  **Reset Testing Connection:** Go to the **Test** tab in your developer console, change the testing dropdown from **"Development"** to **"Off"**, wait 5 seconds, and toggle it back to **"Development"** to force-refresh the hardware connection to your physical Echo Dot.
+    3.  **Verify Device Locale:** Verify your physical Echo Dot's exact language in your smartphone's Alexa app (Devices ➔ Select Echo Dot ➔ Settings Gear ➔ Language). Ensure you have compiled the model in your Developer Console's **Build** tab for that precise locale (e.g. `en-US`, `en-IN`, `en-GB`, `en-CA`, `en-AU`).
+
 ---
 
 ## 📄 License
